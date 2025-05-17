@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coupon Test Site</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 40px; }
+    .container { background: white; max-width: 400px; margin: 0 auto; border-radius: 12px; box-shadow: 0 2px 12px #0001; padding: 32px; }
+    input[type="text"] { width: 100%; padding: 10px; font-size: 1.2em; border-radius: 6px; border: 1px solid #aaa; margin-bottom: 16px; }
+    button { width: 100%; padding: 12px; font-size: 1.1em; border-radius: 6px; background: #1db954; color: white; border: none; cursor: pointer; }
+    button:active { background: #15913e; }
+    .success { color: #1db954; font-weight: bold; margin-top: 16px; }
+    .next-section { margin-top: 32px; padding: 16px; background: #e8ffe8; border-radius: 8px; display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Redeem your coupon</h2>
+    <input type="text" id="couponInput" placeholder="Enter coupon code..." autocomplete="off" />
+    <button id="redeemBtn">Redeem</button>
+    <div class="success" id="successMsg" style="display:none;">Correct code! Welcome 🎉</div>
+    <div class="next-section" id="nextSection">
+      <h3>Next part of the site</h3>
+      <p>Gefeliciteerd! Je hebt de juiste code gevonden.<br>Hier kun je verder testen...</p>
+    </div>
+  </div>
+  <script>
+    const CORRECT_CODE = "F9kFY3WdJS"; // Zet hier de testcode die "correct" is
+    document.getElementById('redeemBtn').onclick = function() {
+      const val = document.getElementById('couponInput').value.trim();
+      if(val === CORRECT_CODE) {
+        document.getElementById('successMsg').style.display = 'block';
+        document.getElementById('nextSection').style.display = 'block';
+      } else {
+        document.getElementById('successMsg').style.display = 'none';
+        document.getElementById('nextSection').style.display = 'none';
+        document.getElementById('couponInput').style.borderColor = '#e74c3c';
+        setTimeout(() => {
+          document.getElementById('couponInput').style.borderColor = '#aaa';
+        }, 600);
+      }
+    }
+    document.getElementById('couponInput').addEventListener('keydown', function(e) {
+      if(e.key === 'Enter') document.getElementById('redeemBtn').click();
+    });
+  </script>
+</body>
+</html>
