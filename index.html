@@ -27,18 +27,52 @@
   </div>
   <script>
     const CORRECT_CODE = "F9kFY3WdJS"; // Zet hier de testcode die "correct" is
+    const MAX_ATTEMPTS = 5; // Aantal foute pogingen voor cooldown
+    const COOLDOWN_SECONDS = 30; // Duur van cooldown in seconden
+    let attempts = 0;
+    let cooldownTimer = null;
+
+    // Voeg cooldown-melding toe
+    const cooldownMsg = document.createElement('div');
+    cooldownMsg.id = 'cooldownMsg';
+    cooldownMsg.style = 'color:#e67e22;margin-top:16px;display:none;font-weight:bold;';
+    document.querySelector('.container').appendChild(cooldownMsg);
+
+    function setCooldown(seconds) {
+      document.getElementById('redeemBtn').disabled = true;
+      document.getElementById('couponInput').disabled = true;
+      cooldownMsg.style.display = 'block';
+      let remaining = seconds;
+      cooldownMsg.textContent = `Cooldown actief! Wacht ${remaining} seconden...`;
+      cooldownTimer = setInterval(() => {
+        remaining--;
+        cooldownMsg.textContent = `Cooldown actief! Wacht ${remaining} seconden...`;
+        if(remaining <= 0) {
+          clearInterval(cooldownTimer);
+          cooldownMsg.style.display = 'none';
+          document.getElementById('redeemBtn').disabled = false;
+          document.getElementById('couponInput').disabled = false;
+          attempts = 0;
+        }
+      }, 1000);
+    }
+
     document.getElementById('redeemBtn').onclick = function() {
       const val = document.getElementById('couponInput').value.trim();
       if(val === CORRECT_CODE) {
         document.getElementById('successMsg').style.display = 'block';
         document.getElementById('nextSection').style.display = 'block';
       } else {
+        attempts++;
         document.getElementById('successMsg').style.display = 'none';
         document.getElementById('nextSection').style.display = 'none';
         document.getElementById('couponInput').style.borderColor = '#e74c3c';
         setTimeout(() => {
           document.getElementById('couponInput').style.borderColor = '#aaa';
         }, 600);
+        if(attempts >= MAX_ATTEMPTS) {
+          setCooldown(COOLDOWN_SECONDS);
+        }
       }
     }
     document.getElementById('couponInput').addEventListener('keydown', function(e) {
